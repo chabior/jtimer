@@ -1,0 +1,23 @@
+{
+    "name": "chabior/jTimer",
+    "description": "Jira time",
+    "keywords": ["jtimer"],
+    "homepage": "https://github.com/chabior/jTimer",
+    "type": "library",
+    "license": "Apache 2.0",
+    "authors": [
+        {
+            "name": "Paweł Chabierski"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "eloquent/enumeration": "dev-master"
+    },
+    "autoload": {
+        "psr-0": {
+            "chabior\\jTimer": "src/",
+            "chabior\\jTimer\\Test": "test/src/"
+        }
+    }
+}

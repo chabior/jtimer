@@ -1,13 +1,13 @@
 <?php
 
-namespace chabior\JTimer;
+namespace chabior\jTimer;
 
 /**
- * Description of JTimer
+ * Description of jTimer
  *
  * @author chabior
  */
-class JTimer
+class jTimer
 {
     /**
      *
@@ -44,13 +44,13 @@ class JTimer
     
     /**
      * 
-     * @param \chabior\JTimer\Enum\TimePrefix $timePreFix
+     * @param \chabior\jTimer\Enum\TimePrefix $timePreFix
      * @param mixed $value
      * @throws Exception\InvalidTimePrefixException
      */
     public function changeTime(Enum\TimePrefix $timePreFix, $value)
     {
-        $prefix = $timePreFix->getPrefix();
+        $prefix = $timePreFix->key();
         
         if ($timePreFix->isTimeModifer()) {
             $modifers = & $this->timeModifers;
@@ -171,11 +171,12 @@ class JTimer
      */
     protected function recalculate()
     {
-        $interval = new \DateInterval($this->getIntervalSpec());
+        $timeSpec = $this->getIntervalSpec();
+        $interval = new \DateInterval($timeSpec);
         
         $obj1 = new \DateTime();
-        $obj2 = new \DateTime();
-        $obj2->modify($interval);
+        $obj2 = clone $obj1;
+        $obj2->add($interval);
         
         $this->recalculated = $obj2->diff($obj1);
         
@@ -198,7 +199,7 @@ class JTimer
             $timeSpec .= $this->getTimeString();
         }
         
-        return $timeSpec;
+        return strtoupper($timeSpec);
     }
     
     /**
@@ -209,8 +210,10 @@ class JTimer
     {
         $timeSpec = '';
         
-        foreach ($this->dayModifers as $prefix => $value) {
-            $timeSpec .= $value.$prefix;
+        foreach ($this->dayModifers as $key => $value) {
+            $timePrefix = Enum\TimePrefix::memberByKey($key);
+            /* @var $timePrefix Enum\TimePrefix */
+            $timeSpec .= $value.$timePrefix->getPrefix();
         }
         
         return $timeSpec;
@@ -224,8 +227,44 @@ class JTimer
     {
        $timeSpec = '';
 
-        foreach ($this->timeModifers as $prefix => $value) {
-            $timeSpec .= $value.$prefix;
+        foreach ($this->timeModifers as $key => $value) {
+            $timePrefix = Enum\TimePrefix::memberByKey($key);
+            /* @var $timePrefix Enum\TimePrefix */
+            $timeSpec .= $value.$timePrefix->getPrefix();
+        }
+        
+        return $timeSpec;
+    }
+    
+    /**
+     * 
+     * @return string
+     */
+    protected function getIntervalDayString()
+    {
+        $timeSpec = '';
+        
+        foreach ($this->dayModifers as $key => $value) {
+            $timePrefix = Enum\TimePrefix::memberByKey($key);
+            /* @var $timePrefix Enum\TimePrefix */
+            $timeSpec .= $value.$timePrefix->getIntervalPrefix();
+        }
+        
+        return $timeSpec;
+    }
+    
+    /**
+     * 
+     * @return string
+     */
+    protected function getIntervalTimeString()
+    {
+       $timeSpec = '';
+
+        foreach ($this->timeModifers as $key => $value) {
+            $timePrefix = Enum\TimePrefix::memberByKey($key);
+            /* @var $timePrefix Enum\TimePrefix */
+            $timeSpec .= $value.$timePrefix->getIntervalPrefix();
         }
         
         return $timeSpec;

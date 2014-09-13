@@ -1,6 +1,6 @@
 <?php
 
-namespace chabior\JTimer\Exception;
+namespace chabior\jTimer\Exception;
 
 /**
  * Description of Exception

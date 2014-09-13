@@ -1,6 +1,6 @@
 <?php
 
-namespace chabior\JTimer\Enum;
+namespace chabior\jTimer\Enum;
 
 use Eloquent\Enumeration\AbstractMultiton;
 
@@ -9,7 +9,6 @@ use Eloquent\Enumeration\AbstractMultiton;
  *
  * @author chabior
  * 
- * @method TimePrefix MILI_SECOND() 
  * @method TimePrefix SECOND() 
  * @method TimePrefix MINUTE() 
  * @method TimePrefix HOUR() 
@@ -24,7 +23,13 @@ class TimePrefix extends AbstractMultiton
      *
      * @var string
      */
-    protected $prefix;
+    protected $inputPrefix;
+    
+    /**
+     *
+     * @var string
+     */
+    protected $intervalPrefix;
     
     /**
      *
@@ -44,7 +49,16 @@ class TimePrefix extends AbstractMultiton
      */
     public function getPrefix()
     {
-        return $this->prefix;
+        return $this->inputPrefix;
+    }
+    
+    /**
+     * 
+     * @return string
+     */
+    public function getIntervalPrefix()
+    {
+        return $this->intervalPrefix;
     }
     
     /**
@@ -67,26 +81,29 @@ class TimePrefix extends AbstractMultiton
     
     protected static function initializeMembers() 
     {
-        new static('SECOND', 's', 'second', true);
-        new static('MINUTE', 'i', 'minute', true);
-        new static('HOUR', 'h', 'hour', true);
-        new static('DAY', 'd', 'day', false);
-        new static('WEEK', 'w', 'week', false);
-        new static('MONTH', 'm', 'month', false);
-        new static('YEAR', 'y', 'year', false);
+        new static('SECOND', 's', 'S', 'second', true);
+        new static('MINUTE', 'i', 'M', 'minute', true);
+        new static('HOUR', 'h', 'H', 'hour', true);
+        new static('DAY', 'd', 'D', 'day', false);
+        new static('WEEK', 'w', 'W', 'week', false);
+        new static('MONTH', 'm', 'M', 'month', false);
+        new static('YEAR', 'y', 'Y', 'year', false);
     }
     
     /**
      * 
      * @param string $key
-     * @param string $prefix
+     * @param string $inputPrefix
+     * @param string $intervalPrefix
      * @param string $name
+     * @param boolean $isTime
      */
-    protected function __construct($key, $prefix, $name, $isTime)
+    protected function __construct($key, $inputPrefix, $intervalPrefix, $name, $isTime)
     {
         parent::__construct($key);
         
-        $this->prefix = $prefix;
+        $this->inputPrefix = $inputPrefix;
+        $this->intervalPrefix = $intervalPrefix;
         $this->name = $name;
         $this->isTime = $isTime;
     }

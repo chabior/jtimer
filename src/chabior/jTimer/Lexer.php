@@ -1,13 +1,15 @@
 <?php
 
-namespace chabior\JTimer;
+namespace chabior\jTimer;
+
+use chabior\jTimer\Model\LexerInterface;
 
 /**
  * Description of Lexer
  *
  * @author chabior
  */
-class Lexer
+class Lexer implements LexerInterface
 {
     const T_NEGATIVE = 't_negative';
     const T_SPACE = 't_space';
@@ -57,19 +59,23 @@ class Lexer
      */
     protected function getTermianals()
     {
-        $terminals = array(
-            self::T_NEGATIVE => '/-{1}/Ai',
-            self::T_SPACE => '/\s/Ai',
-            self::T_NUMBER => '/[0-9.]+/Ai',
-            
-            self::T_MONTH => sprintf('/%s{1}/Ai', Enum\TimePrefix::SECOND()->getPrefix()),
-            self::T_HOUR => sprintf('/%s{1}/Ai', Enum\TimePrefix::HOUR()->getPrefix()),
-            self::T_MINUTE => sprintf('/%s{1}/Ai', Enum\TimePrefix::MINUTE()->getPrefix() ),
-            self::T_SECOND => sprintf('/%s{1}/Ai', Enum\TimePrefix::SECOND()->getPrefix()),
-            self::T_DAY => sprintf('/%s{1}/Ai', Enum\TimePrefix::DAY()->getPrefix()),
-            self::T_WEEK => sprintf('/%s{1}/Ai', Enum\TimePrefix::WEEK()->getPrefix()),
-            self::T_YEAR => sprintf('/%s{1}/Ai', Enum\TimePrefix::YEAR()->getPrefix()),
-        );
+        static $terminals = null;
+        
+        if (null === $terminals) {
+            $terminals = array(
+                self::T_NEGATIVE => '/-{1}/Ai',
+                self::T_SPACE => '/\s/Ai',
+                self::T_NUMBER => '/[0-9.]+/Ai',
+
+                self::T_MONTH => sprintf('/%s{1}/Ai', Enum\TimePrefix::MONTH()->getPrefix()),
+                self::T_HOUR => sprintf('/%s{1}/Ai', Enum\TimePrefix::HOUR()->getPrefix()),
+                self::T_MINUTE => sprintf('/%s{1}/Ai', Enum\TimePrefix::MINUTE()->getPrefix() ),
+                self::T_SECOND => sprintf('/%s{1}/Ai', Enum\TimePrefix::SECOND()->getPrefix()),
+                self::T_DAY => sprintf('/%s{1}/Ai', Enum\TimePrefix::DAY()->getPrefix()),
+                self::T_WEEK => sprintf('/%s{1}/Ai', Enum\TimePrefix::WEEK()->getPrefix()),
+                self::T_YEAR => sprintf('/%s{1}/Ai', Enum\TimePrefix::YEAR()->getPrefix()),
+            );
+        }
         
         return $terminals;
     }

@@ -58,9 +58,15 @@ class jTimer
             $modifers = & $this->dayModifers;
         }
         
+        if ('WEEK' === $prefix) {
+            $value *= 7;
+            $prefix = 'DAY';
+        }
+        
         if (!isset($modifers[$prefix])) {
             $modifers[$prefix] = 0;
         }
+        
         
         $modifers[$prefix] += $value;
         
@@ -86,7 +92,7 @@ class jTimer
      */
     public function getMonths()
     {
-        return $this->getAsPrefix('m');
+        return $this->getAsPrefix(Enum\TimePrefix::MONTH());
     }
     
     /**
@@ -95,7 +101,7 @@ class jTimer
      */
     public function getDays()
     {
-        return $this->getAsPrefix('d');
+        return $this->getAsPrefix(Enum\TimePrefix::DAY());
     }
     
     /**
@@ -104,7 +110,7 @@ class jTimer
      */
     public function getSeconds()
     {
-        return $this->getAsPrefix('s');
+        return $this->getAsPrefix(Enum\TimePrefix::SECOND());
     }
     
     /**
@@ -113,7 +119,7 @@ class jTimer
      */
     public function getMinutes()
     {
-        return $this->getAsPrefix('i');
+        return $this->getAsPrefix(Enum\TimePrefix::MINUTE());
     }
     
     /**
@@ -122,7 +128,7 @@ class jTimer
      */
     public function getHours()
     {
-        return $this->getAsPrefix('h');
+        return $this->getAsPrefix(Enum\TimePrefix::HOUR());
     }
     
     /**
@@ -131,7 +137,7 @@ class jTimer
      */
     public function getYears()
     {
-        return $this->getAsPrefix('y');
+        return $this->getAsPrefix(Enum\TimePrefix::YEAR());
     }
     
     /**
@@ -151,7 +157,7 @@ class jTimer
     
     /**
      * 
-     * @param string $prefix
+     * @param Enum\TimePrefix $prefix
      * @return int
      * @throws Exception\InvalidTimePrefixException
      */
@@ -159,11 +165,12 @@ class jTimer
     {
         $interval = $this->getDateInterval();
         
-        if (!property_exists($interval, $prefix)) {
-            throw Exception\InvalidTimePrefixException::get($prefix);
+        $timePrefix = $prefix->getPrefix();
+        if (!property_exists($interval, $timePrefix)) {
+            throw Exception\InvalidTimePrefixException::get($timePrefix);
         }
         
-        return $interval->$prefix;
+        return $interval->$timePrefix;
     }
     
     /**
@@ -191,12 +198,12 @@ class jTimer
     {
         $timeSpec = 'P';
         
-        $timeSpec .= $this->getDayString();
+        $timeSpec .= $this->getIntervalDayString();
         
         if (count($this->timeModifers) > 0) {
             $timeSpec .= 'T';
 
-            $timeSpec .= $this->getTimeString();
+            $timeSpec .= $this->getIntervalTimeString();
         }
         
         return strtoupper($timeSpec);

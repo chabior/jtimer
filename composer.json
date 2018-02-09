@@ -4,7 +4,6 @@
     "keywords": ["jtimer"],
     "homepage": "https://github.com/chabior/jTimer",
     "type": "library",
-    "license": "Apache 2.0 ",
     "authors": [
         {
             "name": "Paweł Chabierski"
